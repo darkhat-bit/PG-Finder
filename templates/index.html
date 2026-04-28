@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}PGFind - Home{% endblock %}
+
+{% block content %}
+<div class="row text-center mb-5 mt-4">
+    <div class="col-12">
+        <h1 class="display-4 text-primary fw-bold">Find Your Perfect PG</h1>
+        <p class="lead text-muted">A comprehensive, verified directory of paying guest accommodations for students in Phagwara and Jalandhar.</p>
+        <p class="badge bg-secondary p-2 fs-6">Currently tracking {{ total_pgs }} PGs!</p>
+    </div>
+</div>
+
+<!-- Search Form (Basic HTML Form) -->
+<div class="row justify-content-center mb-5">
+    <div class="col-md-8">
+        <div class="card p-4">
+            <h3 class="mb-3">Quick Search</h3>
+            <form action="/search" method="GET">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label for="area" class="form-label">Location/Area</label>
+                        <select name="area" id="area" class="form-select">
+                            <option value="">Any Area</option>
+                            {% for area in areas %}
+                            <option value="{{ area }}">{{ area }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="max_rent" class="form-label">Max Rent (₹)</label>
+                        <input type="number" class="form-control" id="max_rent" name="max_rent" placeholder="e.g. 5000">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">&nbsp;</label>
+                        <button type="submit" class="btn btn-primary w-100">🔍 Search PGs</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Featured/Top Rated PGs Section -->
+<h3 class="border-bottom pb-2 mb-4">Top Rated Verified PGs</h3>
+<div class="row">
+    {% for pg in featured_pgs %}
+    <div class="col-md-6 col-lg-3 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">{{ pg.name }}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">📍 {{ pg.area }}</h6>
+                
+                <p class="card-text">
+                    <strong>Rent:</strong> ₹{{ pg.rent }}/month<br>
+                    <strong>For:</strong> {{ pg.gender }}<br>
+                    <strong>Rating:</strong> ⭐ {{ pg.avg_rating }}/5.0<br>
+                </p>
+                
+                <span class="verified-badge">✓ Verified by PGFind</span>
+            </div>
+            <div class="card-footer bg-white">
+                <a href="/pg/{{ pg.id }}" class="btn btn-outline-primary btn-sm w-100">View Details</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    
+    {% if not featured_pgs %}
+    <div class="col-12 text-center">
+        <p class="text-muted">No verified PGs found in the database. Run the app to add sample data!</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

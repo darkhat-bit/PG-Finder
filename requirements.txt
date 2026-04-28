@@ -1,0 +1,10 @@
+# PGFind - Dependencies
+# Install all: pip install -r requirements.txt
+
+fastapi==0.104.1          # Web framework for building APIs
+uvicorn==0.24.0           # Server to run FastAPI
+jinja2==3.1.2             # Template engine for HTML pages
+python-multipart==0.0.6   # For handling form data
+psycopg==3.1.15           # PostgreSQL driver (psycopg3)
+pandas==2.1.4             # Data analysis and filtering
+numpy==1.26.2             # Numerical calculations

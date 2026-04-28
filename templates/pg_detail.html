@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block title %}{{ pg.name }} - PGFind{% endblock %}
+
+{% block content %}
+<div class="mb-4">
+    <a href="/search" class="text-decoration-none">← Back to Search Results</a>
+</div>
+
+<div class="row">
+    <!-- PG Description & Details -->
+    <div class="col-md-8 mb-4">
+        <div class="card p-4 h-100">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2 class="mb-0">{{ pg.name }}</h2>
+                <div class="text-end">
+                    {% if pg.verified %}
+                    <span class="badge bg-success fs-5 mb-2">✓ Verified Property</span>
+                    {% else %}
+                    <span class="badge bg-secondary fs-5 mb-2">Pending Verification</span>
+                    {% endif %}
+                    
+                    {% if current_user and current_user.role == 'admin' %}
+                    <div class="d-block mt-1">
+                        <a href="/admin/verify/{{ pg.id }}" class="btn btn-sm btn-outline-warning">Toggle Verify</a>
+                        <a href="/admin/delete/{{ pg.id }}" class="btn btn-sm btn-danger ms-1" onclick="return confirm('WARNING!\nAre you completely sure you want to permanently delete this PG and all of its reviews?');">Delete PG</a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <p class="text-muted fs-5">📍 {{ pg.area }}</p>
+            
+            <hr>
+            
+            <div class="row mb-4">
+                <div class="col-sm-4 mb-3">
+                    <h5 class="text-muted">Monthly Rent</h5>
+                    <h3 class="text-primary">₹{{ pg.rent }}</h3>
+                </div>
+                <div class="col-sm-4 mb-3">
+                    <h5 class="text-muted">Allowed For</h5>
+                    <h3>{{ pg.gender }}</h3>
+                </div>
+                <div class="col-sm-4 mb-3">
+                    <h5 class="text-muted">Contact Owner</h5>
+                    <h4>{{ pg.contact }}</h4>
+                </div>
+            </div>
+            
+            <h4 class="mt-2 mb-3">Amenities Included</h4>
+            <div class="row">
+                {% if amenities_list %}
+                    {% for amenity in amenities_list %}
+                    <div class="col-sm-4 mb-2">
+                        <span class="badge bg-info text-dark fs-6 w-100 p-2 text-start">
+                            ✨ {{ amenity }}
+                        </span>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-muted">No specific amenities listed.</p>
+                {% endif %}
+            </div>
+            
+            <div class="mt-auto pt-4 text-muted small">
+                Listed on PGFind since: {{ pg.created_at.strftime('%B %Y') }}
+            </div>
+        </div>
+    </div>
+
+    <!-- Review Section -->
+    <div class="col-md-4 mb-4">
+        <div class="card p-4 h-100 bg-light">
+            <div class="text-center mb-4">
+                <h3 class="mb-0">⭐ {{ avg_rating }}/5.0</h3>
+                <p class="text-muted">{{ total_reviews }} Student Reviews</p>
+                {% if rating_std > 0 %}
+                <small class="text-muted">Rating variability: ±{{ rating_std|round(1) }}</small>
+                {% endif %}
+            </div>
+            
+            <hr>
+            
+            <h5 class="mb-3">Add Your Review</h5>
+            <form action="/pg/{{ pg.id }}/review" method="POST" class="mb-4">
+                <div class="mb-2">
+                    <input type="text" name="reviewer_name" class="form-control" placeholder="Your Name" required>
+                </div>
+                <div class="mb-2">
+                    <select name="rating" class="form-select" required>
+                        <option value="5">⭐⭐⭐⭐⭐ Excellent (5)</option>
+                        <option value="4">⭐⭐⭐⭐ Good (4)</option>
+                        <option value="3">⭐⭐⭐ Average (3)</option>
+                        <option value="2">⭐⭐ Poor (2)</option>
+                        <option value="1">⭐ Terrible (1)</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <textarea name="comment" class="form-control" rows="2" placeholder="Tell others about your experience..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Submit Review</button>
+            </form>
+            
+            <!-- Existing Reviews List -->
+            <h5 class="mt-4 mb-3 border-bottom pb-2">Recent Reviews</h5>
+            <div class="overflow-auto" style="max-height: 400px;">
+                {% if reviews %}
+                    {% for review in reviews %}
+                    <div class="card mb-2 border-0 shadow-sm">
+                        <div class="card-body p-3">
+                            <div class="d-flex justify-content-between">
+                                <strong>{{ review.reviewer_name }}</strong>
+                                <span class="text-warning">
+                                    {% for i in range(review.rating) %}⭐{% endfor %}
+                                </span>
+                            </div>
+                            <p class="mb-1 mt-2 small">{{ review.comment }}</p>
+                            <small class="text-muted" style="font-size: 0.7rem;">{{ review.created_at.strftime('%Y-%m-%d') }}</small>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-muted text-center italic mt-3">Be the first to review this PG!</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

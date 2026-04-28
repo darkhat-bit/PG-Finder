@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+
+{% block title %}Market Analytics - PGFind{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12 text-center">
+        <h2 class="text-primary">PG Market Analytics</h2>
+        <p class="text-muted">Data-driven insights for students in Phagwara/Jalandhar</p>
+        <p class="badge bg-dark rounded-pill">Total PGs Analyzed: {{ total_pgs }}</p>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Numpy Statistics Box -->
+    <div class="col-md-6 mb-4">
+        <div class="card p-4 h-100 border-primary shadow-sm">
+            <h4 class="text-primary border-bottom pb-2 mb-3">Price Overview (NumPy)</h4>
+            <div class="row text-center mt-4">
+                <div class="col-6 mb-4">
+                    <p class="text-muted mb-1 text-uppercase small fw-bold">Average Rent</p>
+                    <h3>₹{{ price_stats.mean }}</h3>
+                </div>
+                <div class="col-6 mb-4">
+                    <p class="text-muted mb-1 text-uppercase small fw-bold">Median Rent</p>
+                    <h3>₹{{ price_stats.median }}</h3>
+                </div>
+                <div class="col-6">
+                    <p class="text-muted mb-1 text-uppercase small fw-bold">Lowest Found</p>
+                    <h4 class="text-success">₹{{ price_stats.min }}</h4>
+                </div>
+                <div class="col-6">
+                    <p class="text-muted mb-1 text-uppercase small fw-bold">Highest Found</p>
+                    <h4 class="text-danger">₹{{ price_stats.max }}</h4>
+                </div>
+            </div>
+            <div class="mt-auto text-muted small pt-3 text-center">
+                * Standard deviation: ₹{{ price_stats.std }} (Price variation)
+            </div>
+        </div>
+    </div>
+
+    <!-- Pandas Aggregation Box -->
+    <div class="col-md-6 mb-4">
+        <div class="card p-4 h-100 border-info shadow-sm">
+            <h4 class="text-info border-bottom pb-2 mb-3">Average Rent by Area (Pandas)</h4>
+            <table class="table table-hover mt-3">
+                <thead class="table-light">
+                    <tr>
+                        <th>Location/Area</th>
+                        <th class="text-end">Avg. Monthly Rent</th>
+                        <th class="text-center">No. of PGs</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for area, rent in rent_by_area.items() %}
+                    <tr>
+                        <td>{{ area }}</td>
+                        <td class="text-end fw-bold">₹{{ rent }}</td>
+                        <td class="text-center">
+                            <span class="badge bg-secondary rounded-pill">{{ count_by_area[area] }}</span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-2">
+    <!-- Additional simple analytics -->
+    <div class="col-md-4 mb-4">
+        <div class="card p-3 h-100 bg-light">
+            <h5 class="text-center mb-3 border-bottom pb-2">PG Distribution by Type</h5>
+            <ul class="list-group list-group-flush bg-transparent">
+                {% for gender, count in gender_dist.items() %}
+                <li class="list-group-item bg-transparent d-flex justify-content-between align-items-center">
+                    {{ gender }} PGs
+                    <span class="badge bg-primary rounded-pill">{{ count }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+        <div class="card p-3 h-100 bg-light">
+            <h5 class="text-center mb-3 border-bottom pb-2">Verification Status</h5>
+            <div class="d-flex justify-content-center align-items-center h-100 pb-3">
+                <div class="text-center me-4">
+                    <h3 class="text-success">{{ verified_count }}</h3>
+                    <small class="text-muted">Verified ✓</small>
+                </div>
+                <div class="text-center ms-4 border-start ps-4">
+                    <h3 class="text-secondary">{{ unverified_count }}</h3>
+                    <small class="text-muted">Pending</small>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+        <div class="card p-3 h-100 bg-light">
+            <h5 class="text-center mb-3 border-bottom pb-2">Rating Distribution</h5>
+            {% if rating_stats.total_reviews > 0 %}
+                <div class="text-center mb-2">
+                    <span class="fs-4">Avg: {{ rating_stats.mean }}⭐</span>
+                    <small class="text-muted d-block">From {{ rating_stats.total_reviews }} total reviews</small>
+                </div>
+                {% for stars, count in rating_distribution.items()|list|reverse %}
+                <div class="d-flex align-items-center mb-1" style="font-size: 0.8rem;">
+                    <span class="me-2" style="width: 45px;">{{ stars }}</span>
+                    <div class="progress flex-grow-1" style="height: 8px;">
+                        <div class="progress-bar bg-warning" role="progressbar" style="width: {{ (count / rating_stats.total_reviews * 100)|round }}%;"></div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="text-center text-muted mt-4">Not enough review data yet!</div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

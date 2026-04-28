@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Add New PG - PGFind{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card p-4">
+            <h2 class="mb-1 text-primary">List Your PG</h2>
+            <p class="text-muted mb-4">Add a new PG to our database for students to find.</p>
+            
+            <form action="/add-pg" method="POST">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="name" class="form-label">PG Name *</label>
+                        <input type="text" class="form-control" id="name" name="name" required placeholder="e.g. Sharma Boys PG">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="area" class="form-label">Area/Location *</label>
+                        <input type="text" class="form-control" id="area" name="area" required placeholder="e.g. Lovely Chowk">
+                    </div>
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label for="rent" class="form-label">Monthly Rent (₹) *</label>
+                        <input type="number" class="form-control" id="rent" name="rent" required min="1000">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="gender" class="form-label">PG Type *</label>
+                        <select class="form-select" id="gender" name="gender">
+                            <option value="Boys">Boys Only</option>
+                            <option value="Girls">Girls Only</option>
+                            <option value="Any">Co-ed / Any</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="contact" class="form-label">Contact Number *</label>
+                        <input type="text" class="form-control" id="contact" name="contact" required>
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <label for="amenities" class="form-label">Amenities</label>
+                    <input type="text" class="form-control" id="amenities" name="amenities" placeholder="e.g. WiFi, AC, Food, Laundry (comma separated)">
+                    <div class="form-text">List amenities separated by commas.</div>
+                </div>
+                
+                <div class="alert alert-info py-2 mb-4">
+                    <small>ℹ️ Note: Newly added PGs will be marked as "Unverified" until reviewed by the PGFind team.</small>
+                </div>
+                
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary btn-lg">Add PG Listing</button>
+                    <a href="/" class="btn btn-outline-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

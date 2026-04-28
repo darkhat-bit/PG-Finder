@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Register - PGFind{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-4">
+    <div class="col-md-6">
+        <div class="card p-4 shadow-sm">
+            <h2 class="text-center mb-4 text-primary">Create an Account</h2>
+            
+            {% if error %}
+            <div class="alert alert-danger">{{ error }}</div>
+            {% endif %}
+            
+            <form action="/register" method="POST">
+                <div class="mb-3">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" name="name" class="form-control" required placeholder="e.g. Rahul Sharma">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Email address</label>
+                    <input type="email" name="email" class="form-control" required placeholder="student@example.com">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Password</label>
+                    <input type="password" name="password" class="form-control" required placeholder="Create a password">
+                </div>
+                <div class="mb-4">
+                    <label class="form-label">I want to...</label>
+                    <select name="role" class="form-select">
+                        <option value="user">Search for PGs (Student)</option>
+                        <option value="owner">List my PG (PG Owner)</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-success w-100 mb-3">Register</button>
+            </form>
+            
+            <div class="text-center">
+                <p>Already have an account? <a href="/login" class="text-decoration-none">Login here</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

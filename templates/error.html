@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Error - PGFind{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6 text-center">
+        <div class="card p-5 border-danger border-2">
+            <h1 class="display-1 text-danger">⚠️</h1>
+            <h2 class="text-danger mb-3">Oops! Something went wrong.</h2>
+            <p class="lead">{{ message }}</p>
+            <div class="mt-4">
+                <a href="/" class="btn btn-primary">Return to Homepage</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

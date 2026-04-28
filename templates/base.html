@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}PGFind - Verified PGs{% endblock %}</title>
+    <!-- Basic Bootstrap for simple styling (no custom CSS needed to keep it simple) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Premium Modern Dark Theme */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        
+        body { 
+            padding-top: 70px; 
+            background-color: #0f1115; 
+            color: #f3f4f6; 
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+        
+        /* Modern Navbar with blur effect */
+        .navbar { 
+            background-color: rgba(15, 17, 21, 0.85) !important; 
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #2d3139; 
+        }
+        .navbar-brand { font-weight: 800; font-size: 1.4rem; color: #f3f4f6 !important; letter-spacing: -0.5px; }
+        #navbarNav a.nav-link { color: #9ca3af !important; font-weight: 500; transition: color 0.2s ease; }
+        #navbarNav a.nav-link:hover { color: #ffffff !important; }
+        
+        /* Sleek Cards */
+        .card { 
+            background-color: #1a1d24; 
+            border: 1px solid #2d3139; 
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); 
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+        .card:hover { border-color: #4b5563; }
+        
+        /* Typography overrides */
+        h1, h2, h3, h4, h5, h6 { color: #f3f4f6 !important; font-weight: 700; letter-spacing: -0.5px; }
+        .text-primary { color: #a3a3a3 !important; } /* Muted header accent */
+        .text-muted { color: #888888 !important; }
+        
+        /* Interactive Elements */
+        .btn { border-radius: 6px; font-weight: 500; padding: 8px 16px; transition: all 0.2s ease; }
+        .btn-primary { background-color: #4f46e5; border-color: #4f46e5; color: #ffffff; }
+        .btn-primary:hover { background-color: #4338ca; border-color: #4338ca; }
+        
+        .btn-outline-primary { color: #a3a3a3; border-color: #333; background: #1f1f1f; }
+        .btn-outline-primary:hover { background-color: #ffffff; color: #000; border-color: #fff; }
+        
+        .btn-success { background-color: #10b981; border-color: #10b981; color: #ffffff; }
+        .btn-success:hover { background-color: #059669; }
+        
+        /* Badges */
+        .verified-badge { color: #10b981; font-weight: 600; display: inline-flex; align-items: center; gap: 4px; }
+        .badge.bg-success { background-color: rgba(16, 185, 129, 0.15) !important; color: #34d399 !important; border: 1px solid rgba(16, 185, 129, 0.3); padding: 6px 10px; font-weight: 600; }
+        .badge.bg-secondary { background-color: #2d3139 !important; color: #9ca3af !important; border: 1px solid #4b5563; padding: 6px 10px; }
+        .badge.bg-primary { background-color: #4f46e5 !important; }
+        
+        /* Forms, Tables & Extras */
+        .table { color: #e5e7eb; border-color: #2d3139; }
+        .table-light, .table-light th { background-color: #1a1d24 !important; color: #f3f4f6 !important; border-bottom: 2px solid #374151;}
+        .list-group-item { background-color: transparent !important; color: #d1d5db !important; border-color: #2d3139 !important; }
+        .form-control, .form-select { background-color: #0f1115 !important; border-color: #374151; color: #f3f4f6 !important; border-radius: 6px; }
+        .form-control:focus, .form-select:focus { border-color: #4f46e5; box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.25); }
+        hr { border-color: #2d3139; }
+        .bg-light { background-color: #1f2937 !important; }
+    </style>
+</head>
+<body>
+    <!-- Simple Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="/">PGFind</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/search">Search</a>
+                    </li>
+                    {% if current_user and current_user.role in ['owner', 'admin'] %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/add-pg">Add PG</a>
+                    </li>
+                    {% endif %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/analytics">Data Analytics</a>
+                    </li>
+                    
+                    <!-- Auth Links -->
+                    {% if current_user %}
+                    <li class="nav-item ms-lg-3">
+                        <span class="nav-link text-white fw-bold">User: {{ current_user.name }}</span>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-outline-light ms-2 btn-sm mt-1" href="/logout">Logout</a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item ms-lg-3">
+                        <a class="btn btn-outline-light btn-sm mt-1 me-2" href="/login">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-light btn-sm mt-1" href="/register">Register</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <div class="container mt-4 mb-5">
+        {% block content %}
+        <!-- Child templates will put their content here -->
+        {% endblock %}
+    </div>
+
+    <!-- Simple Footer -->
+    <footer class="bg-dark text-white text-center py-3 mt-auto">
+        <div class="container">
+            <p class="mb-0">© 2026 PGFind - College RPL Project by a 1st Year CSE Student.</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS for dropdowns/navbars -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
